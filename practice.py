@@ -7,26 +7,33 @@ import calendar
 import plotly.express as px
 import streamlit as st
 
-# Parolu təyin edin
-PASSWORD = "mysecurepassword"
+# İstifadəçi məlumatlarını saxlayan bir dict (fayl yerinə)
+USER_DATA = {
+    "123": "password123",  # İstifadəçi ID: parol
+    "456": "password456",
+    "789": "password789"
+}
 
-# Session State-də identifikasiyanı yoxlamaq
+# Session State-də identifikasiya vəziyyətini və istifadəçi ID-ni yoxlamaq
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
+    st.session_state.user_id = None
 
-# Əgər istifadəçi artıq identifikasiya olunmayıbsa
 if not st.session_state.authenticated:
     st.title("Tətbiqə Giriş")
-
-    # İstifadəçidən parol istənilir
-    password = st.text_input("Parolu daxil edin:", type="password")
-
+    
+    # İstifadəçidən ID və parol tələb olunur
+    user_id = st.text_input("İstifadəçi ID:")
+    password = st.text_input("Parol:", type="password")
+    
     if st.button("Giriş"):
-        if password == PASSWORD:
+        # İstifadəçi ID və parol yoxlanılır
+        if user_id in USER_DATA and USER_DATA[user_id] == password:
             st.session_state.authenticated = True
-            st.success("Giriş uğurlu oldu!")
+            st.session_state.user_id = user_id
+            st.success(f"Giriş uğurlu oldu! Xoş gəldiniz, İstifadəçi ID: {user_id}.")
         else:
-            st.error("Yanlış parol. Yenidən cəhd edin.")
+            st.error("Yanlış istifadəçi ID və ya parol.")
 else:
     # Məlumatların yüklənməsi
     fact_url = 'https://drive.google.com/uc?id=1lfRDeRq36e-wBn6undzT1DxlDiKst_8M&export=download'
@@ -1333,9 +1340,10 @@ else:
             st.plotly_chart(fig_table_vagon)
   
 
-    # Çıxış düyməsi əlavə edin
+    # Çıxış düyməsi
     if st.button("Çıxış"):
         st.session_state.authenticated = False
+        st.session_state.user_id = None
         st.experimental_rerun()
 
 
