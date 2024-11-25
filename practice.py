@@ -9,7 +9,7 @@ import streamlit as st
 
 # İstifadəçi məlumatlarını saxlayan bir dict (fayl yerinə)
 USER_DATA = {
-    "123": "7FFYCZB",  # İstifadəçi ID: parol
+    "7FFYCZB": "gundelik123",  # İstifadəçi ID: parol
     "456": "password456",
     "789": "password789"
 }
